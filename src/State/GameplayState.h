@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -10,7 +11,10 @@
 #include "Core/StateMachine.h"
 #include "Core/GameConfig.h"
 
+#include "State/GameSetupState.h"
+
 #include "UI/Button.h"
+#include "UI/Colors.h"
 
 #include "Gameplay/Board.h"
 
@@ -35,6 +39,8 @@ private:
 	GameConfig m_GameConfig;
 
 	std::vector<Button> m_BoardButtons;
+	Button m_GoBackButton;
+	sf::Text m_WinnerText;
 
 	Cell m_CurrentPlayer;
 

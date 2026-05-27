@@ -8,6 +8,7 @@
 struct ButtonStyle
 {
     sf::Vector2f buttonSize = {50.f,50.f};
+    unsigned int characterSize = 30;
 
     sf::Color normalColor = sf::Color::Blue;
     sf::Color hoverColor = sf::Color::Yellow;
@@ -42,6 +43,8 @@ public:
     void setCallback(std::function<void()> callback);
     void setStyle(const ButtonStyle& style);
     void setText(const std::string& text);
+    void setCharacterSize(unsigned int size);
+    void setTextColor(const sf::Color& color);
 
 private:
     bool isMouseOver(const sf::Vector2f& pos) const;

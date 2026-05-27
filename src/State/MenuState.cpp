@@ -41,6 +41,7 @@ MenuState::MenuState(StateMachine& stateMachine, Context& context)
 	});
 
 	m_ExitButton.setStyle(buttonStyle);
+	m_ExitButton.setTextColor(Colors::Danger);
 	m_ExitButton.setText("Wyjscie");
 	m_ExitButton.setPosition({600 - 150,600});
 	m_ExitButton.setCallback([this](){(*m_Context.isRunning) = false;});

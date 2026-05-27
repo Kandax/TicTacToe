@@ -16,6 +16,7 @@ Button::Button(StateMachine &stateMachine, Context& context, const sf::Vector2f&
 {
     //m_Font = m_Context.resourceManager->getFont("Roboto-Variable");
     setText("TEST");
+    setCharacterSize(30);
     setPosition(pos);
 
 }
@@ -99,6 +100,7 @@ void Button::setStyle(const ButtonStyle& style){
     m_Style.textColor = style.textColor;
     m_Style.outlineThickness = style.outlineThickness;
     m_Style.buttonSize = style.buttonSize;
+    m_Style.characterSize = style.characterSize;
 
     m_Shape.setOutlineThickness(m_Style.outlineThickness);
     m_Shape.setFillColor(m_Style.normalColor);
@@ -106,6 +108,8 @@ void Button::setStyle(const ButtonStyle& style){
     m_Shape.setSize(m_Style.buttonSize);
 
     m_Text.setFillColor(m_Style.textColor);
+    //m_Text.setCharacterSize(m_Style.characterSize);
+    setCharacterSize(m_Style.characterSize);
 
 }
 
@@ -118,6 +122,24 @@ void Button::setText(const std::string& text){
         textBounds.getCenter().y
     });
 }
+void Button::setCharacterSize(unsigned int size){
+    m_Text.setCharacterSize(m_Style.characterSize);
+    sf::FloatRect textBounds = m_Text.getLocalBounds();
+    m_Text.setOrigin({
+        textBounds.getCenter().x,
+        textBounds.getCenter().y
+    });
+    m_Text.setPosition({
+        m_Position.x + m_Shape.getSize().x / 2.f,
+        m_Position.y + m_Shape.getSize().y / 2.f
+    });
+}
+
+void Button::setTextColor(const sf::Color& color){
+    m_Text.setFillColor(color);
+}
+
+
 
 bool Button::isMouseOver(const sf::Vector2f& pos) const{
     return m_Shape.getGlobalBounds().contains(pos);

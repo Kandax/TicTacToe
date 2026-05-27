@@ -117,12 +117,14 @@ GameSetupState::GameSetupState(StateMachine& stateMachine, Context& context, con
 	// -------------Other buttons----------------------------
 	buttonStyle.buttonSize = {150,70};
 	m_GoBackButton.setStyle(buttonStyle);
+	m_GoBackButton.setTextColor(Colors::Danger);
 	m_GoBackButton.setText("Wroc");
 	m_GoBackButton.setPosition({0,0});
 	m_GoBackButton.setCallback([this](){m_StateMachine.changeState(std::make_unique<MenuState>(m_StateMachine,m_Context));});
 
 	buttonStyle.buttonSize = {150,70};
 	m_PlayButton.setStyle(buttonStyle);
+	m_PlayButton.setTextColor(Colors::Success);
 	m_PlayButton.setText("Graj");
 	m_PlayButton.setPosition({1200 - 150,0});
 	m_PlayButton.setCallback([this](){
@@ -153,8 +155,11 @@ void GameSetupState::handleEvent(const sf::Event& e){
 	m_BoardSizePlusButton.handleEvent(e);
 	m_RowToWinMinusButton.handleEvent(e);
 	m_RowToWinPlusButton.handleEvent(e);
-	m_AIMinusButton.handleEvent(e);
-	m_AIPlusButton.handleEvent(e);
+	if(m_GameConfig.gameMode == GameMode::PvAI){
+		m_AIMinusButton.handleEvent(e);
+		m_AIPlusButton.handleEvent(e);
+	}
+
 	m_GoBackButton.handleEvent(e);
 	m_PlayButton.handleEvent(e);
 }
@@ -165,8 +170,10 @@ void GameSetupState::update(float dt){
 	m_BoardSizePlusButton.update();
 	m_RowToWinMinusButton.update();
 	m_RowToWinPlusButton.update();
-	m_AIMinusButton.update();
-	m_AIPlusButton.update();
+	if(m_GameConfig.gameMode == GameMode::PvAI){
+		m_AIMinusButton.update();
+		m_AIPlusButton.update();
+	}
 	m_GoBackButton.update();
 	m_PlayButton.update();
 }
@@ -175,8 +182,10 @@ void GameSetupState::render(){
 	m_BoardSizePlusButton.render();
 	m_RowToWinMinusButton.render();
 	m_RowToWinPlusButton.render();
-	m_AIMinusButton.render();
-	m_AIPlusButton.render();
+	if(m_GameConfig.gameMode == GameMode::PvAI){
+		m_AIMinusButton.render();
+		m_AIPlusButton.render();
+	}
 	m_GoBackButton.render();
 	m_PlayButton.render();
 
@@ -186,7 +195,8 @@ void GameSetupState::render(){
 	m_Context.window->draw(m_BoardSizeValueText);
 	m_Context.window->draw(m_RowToWinText);
 	m_Context.window->draw(m_RowToWinValueText);
-	m_Context.window->draw(m_AIText);
-	m_Context.window->draw(m_AIValueText);
-
+	if(m_GameConfig.gameMode == GameMode::PvAI){
+		m_Context.window->draw(m_AIText);
+		m_Context.window->draw(m_AIValueText);
+	}
 }
