@@ -17,6 +17,8 @@
 #include "UI/Colors.h"
 
 #include "Gameplay/Board.h"
+#include "Gameplay/AI.h"
+#include "Gameplay/RandomAI.h"
 
 
 class GameplayState: public State {
@@ -46,4 +48,8 @@ private:
 
 	bool m_IsGameOver;
 	Cell m_Winner;
+
+	std::unique_ptr<AI> m_AI;
+	bool m_IsPvAI;
+	bool m_IsTurnForPlayer;
 };

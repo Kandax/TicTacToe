@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <cstdlib>
 
 #include <SFML/Graphics.hpp>
 

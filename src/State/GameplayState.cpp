@@ -8,8 +8,12 @@ GameplayState::GameplayState(StateMachine& stateMachine, Context& context,GameCo
 	,m_Board(gameConfig.boardSize, gameConfig.symbolsToWin)
 	,m_CurrentPlayer(Cell::O)
 	,m_IsGameOver(false)
+	,m_IsPvAI(false)
+	,m_IsTurnForPlayer(true)
 {
 	std::cout << "GameplayState" << std::endl;
+
+	
 
 	ButtonStyle buttonStyle = {
     .buttonSize = {100.f, 100.f},
@@ -67,6 +71,19 @@ GameplayState::GameplayState(StateMachine& stateMachine, Context& context,GameCo
 
 		}
 	}
+
+
+
+
+	m_AI = std::make_unique<RandomAI>();
+
+	if(m_GameConfig.gameMode == GameMode::PvAI)
+		m_IsPvAI = true;
+
+
+
+
+
 }
 
 void GameplayState::handleEvent(const sf::Event& e){
@@ -87,6 +104,29 @@ void GameplayState::update(float dt)
 	}
 
 	m_GoBackButton.update();
+
+
+	if(m_IsPvAI){
+		if(!m_IsTurnForPlayer){
+			std::optional<Move> m= m_AI->chooseMove(m_Board);
+			if(m.has_value()){
+				Move move = m.value();
+				m_Board.placeSymbol(move.x,move.y, m_CurrentPlayer);
+				if(m_CurrentPlayer == Cell::X){
+					m_BoardButtons[move.x + move.y*m_GameConfig.boardSize].setText("X");
+					m_BoardButtons[move.x + move.y*m_GameConfig.boardSize].setTextColor(Colors::XColor);
+				}else if(m_CurrentPlayer == Cell::O){
+					m_BoardButtons[move.x + move.y*m_GameConfig.boardSize].setText("O");
+					m_BoardButtons[move.x + move.y*m_GameConfig.boardSize].setTextColor(Colors::OColor);
+				}
+				checkWin();
+				switchTurn();
+
+			}
+
+		}
+	}
+
 }
 
 void GameplayState::render()
@@ -106,7 +146,7 @@ void GameplayState::render()
 void GameplayState::onCellClicked(int x, int y){
 	std::cout<<"x: "<<x<<" y: "<<y<<std::endl;
 
-	if(m_Board.placeSymbol(x,y,m_CurrentPlayer) && !m_IsGameOver){
+	if(m_Board.placeSymbol(x,y,m_CurrentPlayer) && !m_IsGameOver && m_IsTurnForPlayer){
 		if(m_CurrentPlayer == Cell::X){
 			m_BoardButtons[x + y*m_GameConfig.boardSize].setText("X");
 			m_BoardButtons[x + y*m_GameConfig.boardSize].setTextColor(Colors::XColor);
@@ -130,7 +170,9 @@ void GameplayState::switchTurn(){
 	}else if(m_CurrentPlayer == Cell::X){
 		m_CurrentPlayer = Cell::O;
 	}
-	
+	if(m_IsPvAI){
+		m_IsTurnForPlayer = !m_IsTurnForPlayer; 
+	}
 }
 
 
