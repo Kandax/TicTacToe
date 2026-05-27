@@ -3,7 +3,7 @@
 Game::Game()
 :WINDOW_WIDTH(1200)
 ,WINDOW_HEIGHT(720)
-,WINDOW_TITLE("Tic Tack Toe")
+,WINDOW_TITLE("Tic Tac Toe")
 ,m_IsRunning(true)
 ,m_Window(sf::VideoMode({WINDOW_WIDTH,WINDOW_HEIGHT}), WINDOW_TITLE)
 ,m_Context({&m_Window,&m_ResourceManager, {0,0},&m_IsRunning})
