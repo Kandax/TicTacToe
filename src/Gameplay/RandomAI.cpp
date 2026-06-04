@@ -1,6 +1,11 @@
 #include "RandomAI.h"
 
 
+RandomAI::RandomAI(Cell symbol) 
+:AI(symbol, 0)
+{}
+
+
 std::optional<Move> RandomAI::chooseMove(const Board &board) {
     for(int y = 0; y < board.getSize(); y++){
         for(int x = 0; x < board.getSize(); x++){

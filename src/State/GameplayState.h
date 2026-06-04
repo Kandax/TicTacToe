@@ -19,6 +19,7 @@
 #include "Gameplay/Board.h"
 #include "Gameplay/AI.h"
 #include "Gameplay/RandomAI.h"
+#include "Gameplay/MinMaxAI.h"
 
 
 class GameplayState: public State {

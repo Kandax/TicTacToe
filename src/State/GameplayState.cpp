@@ -75,7 +75,8 @@ GameplayState::GameplayState(StateMachine& stateMachine, Context& context,GameCo
 
 
 
-	m_AI = std::make_unique<RandomAI>();
+	//m_AI = std::make_unique<RandomAI>(Cell::X);
+	m_AI = std::make_unique<MinMaxAI>(Cell::X,m_GameConfig.ai.depth);
 
 	if(m_GameConfig.gameMode == GameMode::PvAI)
 		m_IsPvAI = true;
@@ -107,7 +108,7 @@ void GameplayState::update(float dt)
 
 
 	if(m_IsPvAI){
-		if(!m_IsTurnForPlayer){
+		if(!m_IsTurnForPlayer && !m_IsGameOver){
 			std::optional<Move> m= m_AI->chooseMove(m_Board);
 			if(m.has_value()){
 				Move move = m.value();
@@ -144,7 +145,7 @@ void GameplayState::render()
 
 
 void GameplayState::onCellClicked(int x, int y){
-	std::cout<<"x: "<<x<<" y: "<<y<<std::endl;
+	//std::cout<<"x: "<<x<<" y: "<<y<<std::endl;
 
 	if(m_Board.placeSymbol(x,y,m_CurrentPlayer) && !m_IsGameOver && m_IsTurnForPlayer){
 		if(m_CurrentPlayer == Cell::X){

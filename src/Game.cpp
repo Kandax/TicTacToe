@@ -10,8 +10,8 @@ Game::Game()
 {
     srand(time(0));
     m_ResourceManager.loadFont("Roboto-Variable", "assets/fonts/Roboto-Variable.ttf");
-    //m_StateMachine.changeState(std::make_unique<MenuState>(m_StateMachine,m_Context));
-    m_StateMachine.changeState(std::make_unique<GameSetupState>(m_StateMachine,m_Context,m_GameConfig));
+    m_StateMachine.changeState(std::make_unique<MenuState>(m_StateMachine,m_Context));
+    //m_StateMachine.changeState(std::make_unique<GameSetupState>(m_StateMachine,m_Context,m_GameConfig));
 }
 
 Game::~Game(){

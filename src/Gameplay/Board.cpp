@@ -12,7 +12,7 @@ Board::Board(int size, int symbolsToWin)
 
 bool Board::placeSymbol(int x, int y, Cell value){
     if( x >= 0 && x < m_Size &&
-        y >= 0 && y <= m_Size &&
+        y >= 0 && y < m_Size &&
         m_Cells[x + m_Size*y] == Cell::None){
             m_Cells[x + m_Size*y] = value;
             return true;
@@ -20,34 +20,57 @@ bool Board::placeSymbol(int x, int y, Cell value){
     return false;
 }
 
+bool Board::clearCell(int x, int y){
+    if( x >= 0 && x < m_Size &&
+        y >= 0 && y < m_Size ){
+            m_Cells[x + m_Size*y] = Cell::None;
+            return true;
+        }
+    return false;
+}
+
+
+
 std::optional<Cell> Board::get(int x, int y) const{
     if( x >= 0 && x < m_Size &&
-        y >= 0 && y <= m_Size){
+        y >= 0 && y < m_Size){
 
             return m_Cells[x + m_Size*y];
         }
     return  std::nullopt;
 }
 
-int Board::getSize() const{
-    return m_Size;
-}
+int Board::getSize() const{ return m_Size; }
 
 
-Cell Board::checkWin(){
+
+int Board::getSymbolsToWin() const{ return m_SymbolsToWin;}
+
+
+
+Cell Board::checkWin() const{
     Cell isWon = checkWinHorizontal();
-    if(isWon != Cell::None)
+    if(isWon != Cell::None){
+        std::cout << "Win detected: Horizontal" << std::endl;
         return isWon;
+    }
 
     isWon = checkWinVertical();
-    if(isWon != Cell::None)
+    if(isWon != Cell::None){
+        std::cout << "Win detected: Vertical" << std::endl;
         return isWon;
+    }
 
     isWon = checkWinDiagonal();
-    return isWon;
+
+    if(isWon != Cell::None){
+        std::cout << "Win detected: Diagonal" << std::endl;
+        return isWon;
+    }
+    return Cell::None;
 }
 
-bool Board::checkDraw(){
+bool Board::checkDraw() const{
     bool isDraw = true;
     for(int i = 0; i< m_Size*m_Size; i++){
         if(m_Cells[i] == Cell::None){
@@ -58,7 +81,7 @@ bool Board::checkDraw(){
 }
 
 
-Cell Board::checkWinHorizontal(){
+Cell Board::checkWinHorizontal() const{
 
     
 
@@ -88,7 +111,7 @@ Cell Board::checkWinHorizontal(){
 }
 
 
-Cell Board::checkWinVertical(){
+Cell Board::checkWinVertical() const{
 
     for(int x = 0; x < m_Size; x++){
         std::string vertical = "";
@@ -119,7 +142,7 @@ Cell Board::checkWinVertical(){
 
 
 
-Cell Board::checkWinDiagonal(){
+Cell Board::checkWinDiagonal() const{
 
     // \ direction 
     for(int startX = 0; startX < m_Size; startX++){
