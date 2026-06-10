@@ -12,6 +12,9 @@ GameplayState::GameplayState(StateMachine& stateMachine, Context& context,GameCo
 	,m_IsTurnForPlayer(true)
 {
 	std::cout << "GameplayState" << std::endl;
+	std::cout<<"Board size: ("<<m_GameConfig.boardSize<<", "<<m_GameConfig.boardSize<<")"<<std::endl;
+	std::cout<<"Symbols in row to win: "<<m_GameConfig.symbolsToWin<<std::endl;
+	std::cout<<"AI level: "<<m_GameConfig.ai.depth<<std::endl;
 
 	
 
@@ -109,9 +112,25 @@ void GameplayState::update(float dt)
 
 	if(m_IsPvAI){
 		if(!m_IsTurnForPlayer && !m_IsGameOver){
+			auto start = std::chrono::high_resolution_clock::now();
+
+			// Ai makes move
 			std::optional<Move> m= m_AI->chooseMove(m_Board);
+
+
+			auto end = std::chrono::high_resolution_clock::now();
+
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+			std::cout<< "duration of AI turn: "<<duration.count() <<"ms"<<std::endl;
 			if(m.has_value()){
+
+
 				Move move = m.value();
+				if(auto* mm = dynamic_cast<MinMaxAI*>(m_AI.get())){
+    				std::cout << "Best move: (" << move.x << "," << move.y << ") score: " << mm->getBestScore()<< std::endl;
+
+				}
 				m_Board.placeSymbol(move.x,move.y, m_CurrentPlayer);
 				if(m_CurrentPlayer == Cell::X){
 					m_BoardButtons[move.x + move.y*m_GameConfig.boardSize].setText("X");
@@ -122,6 +141,7 @@ void GameplayState::update(float dt)
 				}
 				checkWin();
 				switchTurn();
+
 
 			}
 
@@ -155,6 +175,7 @@ void GameplayState::onCellClicked(int x, int y){
 			m_BoardButtons[x + y*m_GameConfig.boardSize].setText("O");
 			m_BoardButtons[x + y*m_GameConfig.boardSize].setTextColor(Colors::OColor);
 		}
+		std::cout<<"Human move: ("<<x <<", "<<y<<")"<<std::endl;
 		checkWin();
 		switchTurn();
 

@@ -51,20 +51,21 @@ int Board::getSymbolsToWin() const{ return m_SymbolsToWin;}
 Cell Board::checkWin() const{
     Cell isWon = checkWinHorizontal();
     if(isWon != Cell::None){
-        std::cout << "Win detected: Horizontal" << std::endl;
+        //std::cout << "Win detected: Horizontal" << std::endl;
         return isWon;
     }
 
     isWon = checkWinVertical();
     if(isWon != Cell::None){
-        std::cout << "Win detected: Vertical" << std::endl;
+        //std::cout << "Win detected: Vertical" << std::endl;
         return isWon;
     }
 
     isWon = checkWinDiagonal();
 
     if(isWon != Cell::None){
-        std::cout << "Win detected: Diagonal" << std::endl;
+        //std::cout << "Win detected: Diagonal" << std::endl;
+        
         return isWon;
     }
     return Cell::None;

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream> 
+#include <future>
+
 
 #include "AI.h"
 
@@ -8,6 +10,9 @@ class MinMaxAI : public AI{
 public:
     MinMaxAI(Cell symbol, unsigned int maxDepth);
     std::optional<Move> chooseMove(const Board& board) override;
+
+    uint64_t getVisitedNodes() const;
+    int getBestScore() const;
 
 private:
     int evaluate(const Board& board);
@@ -19,4 +24,7 @@ private:
 private:
     const int c_WIN_SCORE;
     const int c_INFINITY;
+
+    uint64_t m_VisitedNodes;
+    int m_BestScore;
 };

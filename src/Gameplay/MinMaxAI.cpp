@@ -6,9 +6,10 @@ MinMaxAI::MinMaxAI(Cell symbol, unsigned int maxDepth)
 :AI(symbol, maxDepth)
 ,c_WIN_SCORE(5000000)
 ,c_INFINITY(10000000)
+,m_VisitedNodes(0)
 {}
 
-
+/*
 std::optional<Move> MinMaxAI::chooseMove(const Board& board){
 
     std::vector<Move> moves = getPossibleMoves(board);
@@ -42,7 +43,59 @@ std::optional<Move> MinMaxAI::chooseMove(const Board& board){
 
 
 }
+*/
 
+std::optional<Move> MinMaxAI::chooseMove(const Board& board){
+
+
+    m_VisitedNodes = 0;
+
+
+
+
+    std::vector<Move> moves = getPossibleMoves(board);
+
+    if(moves.empty())
+        return std::nullopt;
+
+    // Run on diffrent threads 
+    std::vector<std::future<int>> futures;
+
+    for(const Move& move : moves)
+    {
+        futures.push_back(
+            std::async(std::launch::async, [this, &board, move](){
+                Board simulation = board;
+                simulation.placeSymbol(move.x, move.y, m_Symbol);
+                return minimax(simulation, false, 0, -c_INFINITY, c_INFINITY);
+            })
+        );
+    }
+
+    // collect results 
+    int bestScore = -c_INFINITY;
+    Move bestMove = moves[0];
+
+    for(int i = 0; i < moves.size(); i++)
+    {
+        int score = futures[i].get();
+        if(score > bestScore)
+        {
+            bestScore = score;
+            bestMove = moves[i];
+        }
+    }
+
+
+    //std::cout << "Best move: (" << bestMove.x << "," << bestMove.y << ") score: " << bestScore << std::endl;
+    m_BestScore = bestScore;
+    return bestMove;
+}
+
+
+
+uint64_t MinMaxAI::getVisitedNodes() const {return m_VisitedNodes;}
+int MinMaxAI::getBestScore() const{return m_BestScore;}
 
 int MinMaxAI::evaluate(const Board& board){
    
@@ -68,6 +121,8 @@ int MinMaxAI::evaluate(const Board& board){
 
 int MinMaxAI::minimax(Board& board, bool maximizing, int depth, int alpha, int beta){
 
+
+    ++m_VisitedNodes;
 
     int score = evaluate(board);
 
